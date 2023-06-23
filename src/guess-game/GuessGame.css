@@ -1,0 +1,38 @@
+.guess-game {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.guess-game > div {
+  padding: 6px;
+}
+
+.game-display {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  border: 3px solid white;
+  border-radius: 6px;
+  color: white;
+}
+
+.game-tiles-wrapper {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 100px);
+  grid-gap: 20px;
+}
+
+.game-tiles-wrapper .game-tile {
+  border: 3px solid white;
+}
+
+button {
+  background: transparent;
+  color: white;
+  border: 3px solid white;
+  padding: 4px 16px;
+  font-size: 16px;
+  margin-right: 8px;
+}
