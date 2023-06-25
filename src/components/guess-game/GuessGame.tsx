@@ -1,6 +1,6 @@
+import {useReducer, useRef} from "react";
+import {Stopwatch} from "../Stopwatch";
 import './GuessGame.css';
-import {formatTime, useTimer} from "../hooks/useTimer";
-import {useReducer} from "react";
 
 interface ICard {
   id: number;
@@ -26,40 +26,41 @@ const initialGameState: IGameState = {
   answers: 0
 }
 
-export const GuessGame = () => {
-  const {
-    timer,
-    handleStart: handleStartTimer,
-    handlePause: handlePauseTimer,
-    handleReset: handleResetTimer,
-  } = useTimer(0);
-
-  const gameReducer = (state: IGameState, {type, payload}: {type: string; payload?: any}): IGameState => {
-    switch (type) {
-      case 'START_GAME':
-        return {...state, status: GameStatus.STARTED, cards: initialGameState.cards};
-      case 'STOP_GAME':
-        return {...state, status: GameStatus.STOPPED};
-      case 'SET_SELECTED_CARD':
-        return {
-          ...state,
-          cards: state.cards.map(card => card.id === payload.id ? ({...card, isSelected: true}): ({...card, isSelected: false}))
-        }
-      default:
-        return initialGameState;
-    }
+const gameReducer = (state: IGameState, {type, payload}: {type: string; payload?: any}): IGameState => {
+  switch (type) {
+    case 'START_GAME':
+      return {...state, status: GameStatus.STARTED, cards: initialGameState.cards};
+    case 'STOP_GAME':
+      return {...state, status: GameStatus.STOPPED};
+    case 'SET_SELECTED_CARD':
+      return {
+        ...state,
+        cards: state.cards.map(card => card.id === payload.id ? ({...card, isSelected: true}): ({...card, isSelected: false}))
+      }
+    default:
+      return initialGameState;
   }
+}
+
+interface IStopwatchHandlers {
+  handleResetTimer: () => void
+  handleStartTimer: () => void
+  handlePauseTimer: () => void
+}
+
+export const GuessGame = () => {
+  const stopwatchRef = useRef<IStopwatchHandlers>(null);
 
   const [gameState, dispatch] = useReducer(gameReducer, initialGameState)
   const onStartGame = () => {
     dispatch({type: 'START_GAME'})
     if(gameState.status === GameStatus.STOPPED)
-      handleResetTimer()
-    handleStartTimer()
+      stopwatchRef.current?.handleResetTimer()
+    stopwatchRef.current?.handleStartTimer()
   }
   const onStopGame = () => {
     dispatch({type: 'STOP_GAME'})
-    handlePauseTimer()
+    stopwatchRef.current?.handlePauseTimer()
   }
   const onCardSelect = (card: ICard) => {
     if(gameState.status === GameStatus.STARTED)
@@ -69,9 +70,7 @@ export const GuessGame = () => {
   return (
     <div className="guess-game">
       <div className="guess-game__watch">
-        <div className="game-display">
-          Stopwatch: {formatTime(timer)}
-        </div>
+        <Stopwatch ref={stopwatchRef}/>
       </div>
       <div className="guess-game__start-controls">
         {gameState.status === GameStatus.STARTED ? (

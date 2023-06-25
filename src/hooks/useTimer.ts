@@ -1,14 +1,5 @@
 import {useRef, useState} from "react";
 
-export const formatTime = (timer: number) => {
-  const getSeconds = `0${(timer % 60)}`.slice(-2)
-  const minutes = `${Math.floor(Number(timer) / 60)}`
-  const getMinutes = `0${Number(minutes) % 60}`.slice(-2)
-  const getHours = `0${Math.floor(timer / 3600)}`.slice(-2)
-
-  return `${getHours} : ${getMinutes} : ${getSeconds}`
-}
-
 export const useTimer = (initialState = 0) => {
   const [timer, setTimer] = useState(initialState)
   const [isActive, setIsActive] = useState(false)
