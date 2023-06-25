@@ -1,3 +1,5 @@
+finalized variant could be checked here https://github.com/forest-shadow/guess-game/tree/final-touches
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
